@@ -1,0 +1,3 @@
+get a life,False
+delete valorant,False
+drink some water,False
