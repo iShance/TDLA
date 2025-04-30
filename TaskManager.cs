@@ -1,65 +1,60 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace TodoListApp
 {
     public class TaskManager
     {
-        private List<Task> tasks;
+        private Task[] tasks;
+        private int taskCount;
+        private const int MaxTasks = 100;
         private const string FILE_PATH = "tasks.txt";
 
         public TaskManager()
         {
-            tasks = new List<Task>();
+            tasks = new Task[MaxTasks];
+            taskCount = 0;
             LoadTasks();
         }
 
-        public void AddTask(string description)
+        public void AddTask(Task task)
         {
-            tasks.Add(new Task(description));
+            if (taskCount >= MaxTasks)
+            {
+                Console.WriteLine("Task limit reached!");
+                return;
+            }
+            tasks[taskCount++] = task;
             Console.WriteLine("Task added successfully!");
         }
 
-        public void ViewTasks()
+        public Task[] GetTasks()
         {
-            if (tasks.Count == 0)
-            {
-                Console.WriteLine("No tasks available.");
-                return;
-            }
-
-            Console.WriteLine("\nTASK LIST:");
-            Console.WriteLine("----------");
-            for (int i = 0; i < tasks.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}. {tasks[i]}");
-            }
-            Console.WriteLine();
-        }
-
-        public void CompleteTask(int taskNumber)
-        {
-            if (taskNumber < 1 || taskNumber > tasks.Count)
-            {
-                Console.WriteLine("Invalid task number!");
-                return;
-            }
-
-            tasks[taskNumber - 1].IsCompleted = true;
-            Console.WriteLine("Task marked as completed!");
+            Task[] activeTasks = new Task[taskCount];
+            Array.Copy(tasks, activeTasks, taskCount);
+            return activeTasks;
         }
 
         public void SaveTasks()
         {
-            using (StreamWriter writer = new StreamWriter(FILE_PATH))
+            try
             {
-                foreach (var task in tasks)
+                using (StreamWriter writer = new StreamWriter(FILE_PATH))
                 {
-                    writer.WriteLine($"{task.Description},{task.IsCompleted}");
+                    foreach (var task in tasks)
+                    {
+                        if (task != null)
+                        {
+                            writer.WriteLine($"{task.Description},{task.IsCompleted},{task.Priority}");
+                        }
+                    }
                 }
+                Console.WriteLine("Tasks saved successfully!");
             }
-            Console.WriteLine("Tasks saved successfully!");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving tasks: {ex.Message}");
+            }
         }
 
         private void LoadTasks()
@@ -67,16 +62,51 @@ namespace TodoListApp
             if (!File.Exists(FILE_PATH))
                 return;
 
-            string[] lines = File.ReadAllLines(FILE_PATH);
-            foreach (var line in lines)
+            try
             {
-                string[] parts = line.Split(',');
-                if (parts.Length == 2)
+                string[] lines = File.ReadAllLines(FILE_PATH);
+                foreach (var line in lines)
                 {
-                    Task task = new Task(parts[0]);
-                    task.IsCompleted = bool.Parse(parts[1]);
-                    tasks.Add(task);
+                    string[] parts = line.Split(',');
+                    if (parts.Length == 3)
+                    {
+                        Task task = new Task(parts[0], Enum.Parse<TaskPriority>(parts[2]));
+                        task.IsCompleted = bool.Parse(parts[1]);
+                        AddTask(task);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading tasks: {ex.Message}");
+            }
+        }
+
+        public void EditTask(int index, string newDescription)
+        {
+            if (index >= 0 && index < taskCount)
+            {
+                tasks[index].Description = newDescription;
+            }
+        }
+
+        public void DeleteTask(int index)
+        {
+            if (index >= 0 && index < taskCount)
+            {
+                for (int i = index; i < taskCount - 1; i++)
+                {
+                    tasks[i] = tasks[i + 1];
+                }
+                tasks[--taskCount] = null;
+            }
+        }
+
+        public void ToggleTaskStatus(int index)
+        {
+            if (index >= 0 && index < taskCount)
+            {
+                tasks[index].IsCompleted = !tasks[index].IsCompleted;
             }
         }
     }
