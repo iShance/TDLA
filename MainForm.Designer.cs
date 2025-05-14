@@ -10,6 +10,8 @@ namespace TodoListApp
         private System.Windows.Forms.Button buttonDeleteTask;
         private System.Windows.Forms.Button buttonToggleStatus;
         private System.Windows.Forms.Button buttonSaveTasks;
+        private System.Windows.Forms.Button buttonExport;
+        private System.Windows.Forms.Button buttonImport;
         private System.Windows.Forms.Label labelTitle;
         private System.Windows.Forms.Label labelDescription;
 
@@ -22,6 +24,8 @@ namespace TodoListApp
             this.buttonDeleteTask = new System.Windows.Forms.Button();
             this.buttonToggleStatus = new System.Windows.Forms.Button();
             this.buttonSaveTasks = new System.Windows.Forms.Button();
+            this.buttonExport = new System.Windows.Forms.Button();
+            this.buttonImport = new System.Windows.Forms.Button();
             this.labelTitle = new System.Windows.Forms.Label();
             this.labelDescription = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -138,12 +142,42 @@ namespace TodoListApp
             this.buttonSaveTasks.UseVisualStyleBackColor = false;
             this.buttonSaveTasks.Click += new System.EventHandler(this.buttonSaveTasks_Click);
             // 
+            // buttonExport
+            // 
+            this.buttonExport.BackColor = System.Drawing.Color.Teal;
+            this.buttonExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonExport.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.buttonExport.ForeColor = System.Drawing.Color.White;
+            this.buttonExport.Location = new System.Drawing.Point(12, 310);
+            this.buttonExport.Name = "buttonExport";
+            this.buttonExport.Size = new System.Drawing.Size(75, 30);
+            this.buttonExport.TabIndex = 9;
+            this.buttonExport.Text = "Export";
+            this.buttonExport.UseVisualStyleBackColor = false;
+            this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
+            // 
+            // buttonImport
+            // 
+            this.buttonImport.BackColor = System.Drawing.Color.Teal;
+            this.buttonImport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonImport.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.buttonImport.ForeColor = System.Drawing.Color.White;
+            this.buttonImport.Location = new System.Drawing.Point(93, 310);
+            this.buttonImport.Name = "buttonImport";
+            this.buttonImport.Size = new System.Drawing.Size(75, 30);
+            this.buttonImport.TabIndex = 10;
+            this.buttonImport.Text = "Import";
+            this.buttonImport.UseVisualStyleBackColor = false;
+            this.buttonImport.Click += new System.EventHandler(this.buttonImport_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(424, 311);
+            this.ClientSize = new System.Drawing.Size(424, 360);
+            this.Controls.Add(this.buttonExport);
+            this.Controls.Add(this.buttonImport);
             this.Controls.Add(this.buttonSaveTasks);
             this.Controls.Add(this.buttonToggleStatus);
             this.Controls.Add(this.buttonDeleteTask);

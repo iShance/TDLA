@@ -95,6 +95,42 @@ namespace TodoListApp
             isDirty = false;
         }
 
+        /// <summary>
+        /// Exports current tasks to a file selected on the desktop (or elsewhere).
+        /// </summary>
+        private void buttonExport_Click(object sender, EventArgs e)
+        {
+            using (var dlg = new SaveFileDialog())
+            {
+                dlg.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
+                dlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                if (dlg.ShowDialog() == DialogResult.OK)
+                {
+                    taskManager.SaveToFile(dlg.FileName);
+                    MessageBox.Show($"Tasks exported to {dlg.FileName}", "Export Complete",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Imports tasks from a selected file and refreshes the list.
+        /// </summary>
+        private void buttonImport_Click(object sender, EventArgs e)
+        {
+            using (var dlg = new OpenFileDialog())
+            {
+                dlg.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
+                dlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                if (dlg.ShowDialog() == DialogResult.OK)
+                {
+                    taskManager.LoadFromFile(dlg.FileName);
+                    RefreshTaskList();
+                    MessageBox.Show($"Tasks imported from {dlg.FileName}", "Import Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+
         private void listBoxTasks_DrawItem(object sender, DrawItemEventArgs e)
         {
             if (e.Index < 0) return;

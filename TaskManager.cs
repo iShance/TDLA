@@ -75,6 +75,29 @@ namespace TodoListApp
             }
         }
 
+        /// <summary>
+        /// Saves tasks to a specified file path.
+        /// </summary>
+        /// <param name="filePath">Destination file path.</param>
+        public void SaveToFile(string filePath)
+        {
+            try
+            {
+                using (var writer = new StreamWriter(filePath))
+                {
+                    foreach (var task in tasks.Where(t => t != null).Cast<Task>())
+                    {
+                        writer.WriteLine($"{task.Description},{task.IsCompleted},{task.Priority}");
+                    }
+                }
+                Console.WriteLine($"Tasks exported to: {filePath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error exporting tasks: {ex.Message}");
+            }
+        }
+
         private void LoadTasks()
         {
             if (!File.Exists(FILE_PATH))
@@ -97,6 +120,37 @@ namespace TodoListApp
             catch (Exception ex)
             {
                 Console.WriteLine($"Error loading tasks: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Loads tasks from a specified file, replacing current tasks in memory.
+        /// </summary>
+        /// <param name="filePath">Path to the tasks file.</param>
+        public void LoadFromFile(string filePath)
+        {
+            // Reset current tasks
+            taskCount = 0;
+            Array.Clear(tasks, 0, tasks.Length);
+            if (!File.Exists(filePath)) return;
+            try
+            {
+                string[] lines = File.ReadAllLines(filePath);
+                foreach (var line in lines)
+                {
+                    var parts = line.Split(',');
+                    if (parts.Length == 3)
+                    {
+                        var task = new Task(parts[0], Enum.Parse<TaskPriority>(parts[2]));
+                        task.IsCompleted = bool.Parse(parts[1]);
+                        AddTask(task);
+                    }
+                }
+                Console.WriteLine($"Tasks loaded from: {filePath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading from file: {ex.Message}");
             }
         }
 
