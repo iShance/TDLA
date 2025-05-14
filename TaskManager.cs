@@ -3,17 +3,26 @@ using System.IO;
 
 namespace TodoListApp
 {
+    // Class: TaskManager manages an array of Task objects
+    // Demonstrates:
+    // - Array of objects: uses Task[] tasks to store multiple Task instances
+    // - File handling: LoadTasks reads from tasks.txt, SaveTasks writes to tasks.txt
     public class TaskManager
     {
+        // Array of Task objects
         private Task[] tasks;
+        // Number of active tasks in the array
         private int taskCount;
         private const int MaxTasks = 100;
+        // File path for saving/loading tasks (file handling)
         private const string FILE_PATH = "tasks.txt";
 
         public TaskManager()
         {
+            // Initialize array to hold up to MaxTasks objects
             tasks = new Task[MaxTasks];
             taskCount = 0;
+            // Load existing tasks from file into the array
             LoadTasks();
         }
 

@@ -1,5 +1,6 @@
 namespace TodoListApp
 {
+    // Enumeration: defines priority levels for tasks
     public enum TaskPriority
     {
         Low,
@@ -7,12 +8,17 @@ namespace TodoListApp
         High
     }
 
+    // Class: base Task represents a general to-do item, demonstrating 'Class' concept
     public class Task
     {
+        // Property: Description of the task
         public string Description { get; set; }
+        // Property: Indicates whether the task is completed
         public bool IsCompleted { get; set; }
+        // Property: Task priority, using the TaskPriority enumeration
         public TaskPriority Priority { get; set; }
 
+        // Constructor: initialize a Task with a description and optional priority
         public Task(string description, TaskPriority priority = TaskPriority.Medium)
         {
             Description = description;
@@ -20,22 +26,27 @@ namespace TodoListApp
             Priority = priority;
         }
 
+        // ToString override: returns string representation including completion and priority
         public override string ToString()
         {
             return $"{(IsCompleted ? "[✓]" : "[ ]")} {Description} (Priority: {Priority})";
         }
     }
 
+    // Inheritance: TimedTask extends Task by adding a due date property
     public class TimedTask : Task
     {
+        // Property: Due date specific to a timed task
         public DateTime DueDate { get; set; }
 
+        // Constructor: call base Task constructor and set the due date
         public TimedTask(string description, DateTime dueDate, TaskPriority priority = TaskPriority.Medium)
             : base(description, priority)
         {
             DueDate = dueDate;
         }
 
+        // ToString override: include due date information
         public override string ToString()
         {
             return base.ToString() + $" (Due: {DueDate:yyyy-MM-dd})";
