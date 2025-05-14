@@ -6,6 +6,8 @@ namespace TodoListApp
 {
     public partial class MainForm : Form
     {
+        // Tracks whether tasks have unsaved changes
+        private bool isDirty = false;
         private TaskManager taskManager;
 
         public MainForm()
@@ -31,6 +33,7 @@ namespace TodoListApp
             {
                 taskManager.AddTask(new Task(description));
                 RefreshTaskList();
+                isDirty = true;
                 textBoxDescription.Clear();
             }
         }
@@ -44,6 +47,7 @@ namespace TodoListApp
                 {
                     taskManager.EditTask(listBoxTasks.SelectedIndex, newDescription);
                     RefreshTaskList();
+                    isDirty = true;
                     textBoxDescription.Clear();
                 }
                 else
@@ -63,6 +67,7 @@ namespace TodoListApp
             {
                 taskManager.DeleteTask(listBoxTasks.SelectedIndex);
                 RefreshTaskList();
+                isDirty = true;
             }
             else
             {
@@ -76,6 +81,7 @@ namespace TodoListApp
             {
                 taskManager.ToggleTaskStatus(listBoxTasks.SelectedIndex);
                 RefreshTaskList();
+                isDirty = true;
             }
             else
             {
@@ -86,6 +92,7 @@ namespace TodoListApp
         private void buttonSaveTasks_Click(object sender, EventArgs e)
         {
             taskManager.SaveTasks();
+            isDirty = false;
         }
 
         private void listBoxTasks_DrawItem(object sender, DrawItemEventArgs e)
