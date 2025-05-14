@@ -1,26 +1,30 @@
 using System;
 using System.IO;
+using System.Linq;  // For LINQ operations on task array
 
 namespace TodoListApp
 {
-    // Class: TaskManager manages an array of Task objects
-    // Demonstrates:
-    // - Array of objects: uses Task[] tasks to store multiple Task instances
-    // - File handling: LoadTasks reads from tasks.txt, SaveTasks writes to tasks.txt
+    /// <summary>
+    /// Manages a collection of Task objects using an array; provides methods to add, edit, delete, toggle status,
+    /// and handles file persistence (loading and saving tasks).
+    /// </summary>
     public class TaskManager
     {
-        // Array of Task objects
-        private Task[] tasks;
+        // Array of Task objects (nullable to allow empty slots)
+        private Task?[] tasks;
         // Number of active tasks in the array
         private int taskCount;
         private const int MaxTasks = 100;
         // File path for saving/loading tasks (file handling)
         private const string FILE_PATH = "tasks.txt";
 
+        /// <summary>
+        /// Initializes a new TaskManager, prepares storage array, and loads tasks from file.
+        /// </summary>
         public TaskManager()
         {
-            // Initialize array to hold up to MaxTasks objects
-            tasks = new Task[MaxTasks];
+            // Initialize array (nullable) to hold up to MaxTasks objects
+            tasks = new Task?[MaxTasks];
             taskCount = 0;
             // Load existing tasks from file into the array
             LoadTasks();
@@ -37,11 +41,16 @@ namespace TodoListApp
             Console.WriteLine("Task added successfully!");
         }
 
+        /// <summary>
+        /// Returns only the active (non-null) tasks as an array.
+        /// </summary>
         public Task[] GetTasks()
         {
-            Task[] activeTasks = new Task[taskCount];
-            Array.Copy(tasks, activeTasks, taskCount);
-            return activeTasks;
+            // Use LINQ to filter out null slots and return Task[]
+            return tasks
+                .Where(t => t != null)
+                .Cast<Task>()
+                .ToArray();
         }
 
         public void SaveTasks()
@@ -95,19 +104,25 @@ namespace TodoListApp
         {
             if (index >= 0 && index < taskCount)
             {
-                tasks[index].Description = newDescription;
+                tasks[index]!.Description = newDescription;
             }
         }
 
+        /// <summary>
+        /// Deletes task at specified index, shifts subsequent tasks left.
+        /// </summary>
         public void DeleteTask(int index)
         {
             if (index >= 0 && index < taskCount)
             {
                 for (int i = index; i < taskCount - 1; i++)
                 {
-                    tasks[i] = tasks[i + 1];
+                    // Shift tasks, non-null guaranteed for indices < taskCount
+                    tasks[i] = tasks[i + 1]!;
                 }
-                tasks[--taskCount] = null;
+                // Decrement count and clear last slot
+                taskCount--;
+                tasks[taskCount] = null;
             }
         }
 
@@ -115,7 +130,8 @@ namespace TodoListApp
         {
             if (index >= 0 && index < taskCount)
             {
-                tasks[index].IsCompleted = !tasks[index].IsCompleted;
+                // Toggle completion status, non-null as index < taskCount
+                tasks[index]!.IsCompleted = !tasks[index]!.IsCompleted;
             }
         }
     }

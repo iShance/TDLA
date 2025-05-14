@@ -1,6 +1,8 @@
 namespace TodoListApp
 {
-    // Enumeration: defines priority levels for tasks
+    /// <summary>
+    /// Defines possible priority levels for tasks.
+    /// </summary>
     public enum TaskPriority
     {
         Low,
@@ -8,7 +10,9 @@ namespace TodoListApp
         High
     }
 
-    // Class: base Task represents a general to-do item, demonstrating 'Class' concept
+    /// <summary>
+    /// Represents a general to-do item with a description, completion status, and priority.
+    /// </summary>
     public class Task
     {
         // Property: Description of the task
@@ -33,7 +37,9 @@ namespace TodoListApp
         }
     }
 
-    // Inheritance: TimedTask extends Task by adding a due date property
+    /// <summary>
+    /// Extends Task by adding a due date property to represent timed tasks.
+    /// </summary>
     public class TimedTask : Task
     {
         // Property: Due date specific to a timed task
